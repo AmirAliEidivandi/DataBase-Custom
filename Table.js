@@ -11,6 +11,15 @@ module.exports = class Table {
         return `data/${this.tableName}.json`;
     }
 
+    overwriteTable(data) {
+        return new Promise((resolve, reject) => {
+            fs.writeFile(this.filePath, JSON.stringify(data), (error) => {
+                if (error) return reject(error);
+                resolve();
+            });
+        });
+    }
+
     insertRecord(record) {
         const recordWithId = {
             _id: uuidV4(),
@@ -27,8 +36,8 @@ module.exports = class Table {
                 })
                 .then((data) => {
                     fs.writeFile(this.filePath, JSON.stringify([...data, recordWithId]), (error) => {
-                        if (error) reject(error);
-
+                        if (error) return reject(error);
+                        
                         resolve(recordWithId);
                     });
                 });
@@ -37,8 +46,8 @@ module.exports = class Table {
 
     readData() {
         return new Promise((resolve, reject) => {
-            fs.readFile(this.filePath, (err, data) => {
-                if (err) return reject(new TableDoesNotExistError(this.tableName));
+            fs.readFile(this.filePath, (error, data) => {
+                if (error) return reject(new TableDoesNotExistError(this.tableName));
 
                 resolve(JSON.parse(data));
             });

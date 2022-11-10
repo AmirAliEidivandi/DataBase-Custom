@@ -5,8 +5,11 @@ describe("With a valid command", () => {
 
     test("It returns correct InsertCommand", () => {
         const insertCommand = parseInsertCommand(command);
-        expect(insertCommand.record).toEqual({ a: 1, b: 2 });
-        expect(insertCommand.tableName).toBe("table");
+        expect(insertCommand.record).toEqual({
+            a: 1,
+            b: 2,
+        });
+        expect(insertCommand.table.tableName).toBe("table");
     });
 });
 
